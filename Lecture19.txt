@@ -1,0 +1,77 @@
+Que1: Merge Intervals
+
+
+class Solution {
+public:
+vector<int> ans;
+vector<vector<int>> v;
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        sort(intervals.begin(), intervals.end());
+        merger(intervals, intervals[0][0], intervals[0][1], 0, 1);
+        return v;
+    }
+public:
+    void merger(vector<vector<int>>& intervals, int start, int end, int i, int j){
+          if(j == intervals.size() and v.size() == 0){
+              ans.push_back(start);
+              ans.push_back(end);
+              v.push_back(ans);
+          }
+          if(j >= intervals.size()){
+              return;
+          }
+          if(end >= intervals[j][0]){
+            start = min(start, intervals[j][0]);
+            end = max(end, intervals[j][1]);
+            if (j+1 == intervals.size()){
+                ans.push_back(start);
+                ans.push_back(end);
+                v.push_back(ans);
+            }
+          }
+          if(end < intervals[j][0]){
+              ans.push_back(start);
+              ans.push_back(end);
+              v.push_back(ans);
+              ans.clear();
+              start = intervals[j][0];
+              end = intervals[j][1];
+              if (j+1 == intervals.size()){
+                ans.push_back(start);
+                ans.push_back(end);
+                v.push_back(ans);
+            }
+          }
+          merger(intervals, start, end, j, j+1);
+    }
+};
+
+///////////////////////////////////////////////////////////////////
+
+
+Que2: Frequent elements
+
+class Solution {
+public:
+    
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> hash;
+        for(int x : nums){
+            if (hash.count(x)==0) hash[x]=1;
+            else hash[x]++;
+        }
+
+        auto bigger=[&](int i, int j){ return hash[i]> hash[j]; };
+  
+        priority_queue<int, vector<int>, decltype(bigger)> pq(bigger);
+        for (auto& [key, v]: hash){
+ //           cout<<key<<"->"<<v<<endl;
+            pq.push(key);
+            if (pq.size()>k) pq.pop();
+        }
+        vector<int> ans(k);
+        copy(&(pq.top()), &(pq.top())+k, &ans[0]);
+
+        return ans;
+    }
+};
